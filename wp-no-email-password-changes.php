@@ -1,6 +1,6 @@
 <?php
 /*
- * This plugin remove the ability for a WordPress users to change their email address and password
+ * This plugin removes the ability for a WordPress users to change their email address and password
  *
  * @package No email/password changes
  * @author Jason Linscombe
@@ -12,7 +12,7 @@
  *            Plugin Name: No email/password changes
  *            Plugin URI: https://github.com/linscombe/wp-no-email-password-changes
  *            Description: Removes the ability for a WordPress users to change their email address and password
- *            Version: 1.1
+ *            Version: 1.2
  *            Author: Jason Linscombe
  *            Author URI: https://github.com/linscombe
  *            Text Domain: wp-no-email-password-changes

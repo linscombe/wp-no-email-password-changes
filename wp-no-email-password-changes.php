@@ -1,32 +1,76 @@
 <?php
 /*
-Plugin Name: No email/password changes
-Description: Removes the ability to change email address and password
-Version: 1.0
-Author: Jason Linscombe
-*/
+ * This plugin remove the ability for a WordPress users to change their email address and password
+ *
+ * @package No email/password changes
+ * @author Jason Linscombe
+ * @license GPL-3.0+
+ * @link https://github.com/linscombe/wp-no-email-password-changes
+ * @copyright 2020 Jason Linscombe All rights reserved.
+ *
+ *            @wordpress-plugin
+ *            Plugin Name: No email/password changes
+ *            Plugin URI: https://github.com/linscombe/wp-no-email-password-changes
+ *            Description: Removes the ability for a WordPress users to change their email address and password
+ *            Version: 1.1
+ *            Author: Jason Linscombe
+ *            Author URI: https://github.com/linscombe
+ *            Text Domain: wp-no-email-password-changes
+ *            Contributors: Jason Linscombe
+ *            License: GPL-3.0+
+ *            License URI: http://www.gnu.org/licenses/gpl-3.0.txt
+ */
 
 
-// don't send confirmaion to verify email change
+/*
+ *
+ * Disabled: Send a confirmation request email when a change of user email address is attempted.
+ * https://developer.wordpress.org/reference/functions/send_confirmation_on_profile_email/
+ *
+ */
 remove_action('personal_options_update', 'send_confirmation_on_profile_email');
 
-// disable email after changing password
+
+/*
+ *
+ * Disabled: Filters whether to send the password change email.
+ * https://developer.wordpress.org/reference/hooks/send_password_change_email/
+ *
+ */
 add_filter('send_password_change_email', '__return_false');
 
-// disable password reset
-function disable_password_reset() { return false; }
+
+/*
+ *
+ * Disabled: Filters whether to allow a password to be reset.
+ * https://developer.wordpress.org/reference/hooks/allow_password_reset/
+ *
+ */
+function disable_password_reset() {
+    return false;
+}
 add_filter ( 'allow_password_reset', 'disable_password_reset' );
 
 
-// remove 'Lost Password'
+/*
+ *
+ * Remove 'Lost Password' text on the login screen
+ *
+ */
 function remove_lostpassword_text ( $text ) {
-    if ($text == 'Lost your password?'){$text = '';}
+    if ($text == 'Lost your password?'){
+        $text = '';
+    }
     return $text;
 }
 add_filter( 'gettext', 'remove_lostpassword_text' );
 
 
-// disable generate random password
+/*
+ *
+ * Remove generate random password generated on the profile screen
+ *
+ */
 function disable_random_password( $password ) {
     $action = isset( $_GET['action'] ) ? $_GET['action'] : '';
     if ( 'wp-login.php' === $GLOBALS['pagenow'] && ( 'rp' == $action  || 'resetpass' == $action ) ) {
@@ -37,16 +81,23 @@ function disable_random_password( $password ) {
 add_filter( 'random_password', 'disable_random_password', 10, 2 );
 
 
-// disable password fields
-// if ( is_admin() )
-  add_action( 'init', 'disable_password_fields', 10 );
-
+/*
+ *
+ * Disable password fields on the profile screen
+ *
+ */
 function disable_password_fields() {
-//   if ( ! current_user_can( 'administrator' ) )
     $show_password_fields = add_filter( 'show_password_fields', '__return_false' );
 }
+add_action( 'init', 'disable_password_fields', 10 );
 
 
+    
+/*
+ *
+ * Disable changing email address
+ *
+ */
 class DisableMailChange
 {
 
